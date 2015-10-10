@@ -8,7 +8,7 @@ install:
   - pip install -e .
 
 script:
-  - py.test robby -v
+  - py.test --cov=robby --cov-report=term
 
 deploy:
   provider: pypi

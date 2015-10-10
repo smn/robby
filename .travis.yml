@@ -1,7 +1,7 @@
 language: python
 python:
-  - py27
-  - pypy
+  - "2.7"
+  - "pypy"
 
 install:
   - pip install -r requirements-dev.txt

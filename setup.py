@@ -11,22 +11,17 @@ except ImportError:
 with open('README.rst') as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
-    history = history_file.read().replace('.. :changelog:', '')
+with open('requirements.txt') as req_file:
+    requirements = req_file.read().split('\n')
 
-requirements = [
-    # TODO: put package requirements here
-]
-
-test_requirements = [
-    # TODO: put package test requirements here
-]
+with open('requirements-dev.txt') as req_file:
+    requirements_dev = req_file.read().split('\n')
 
 setup(
     name='robby',
     version='0.1.0',
     description="Robby",
-    long_description=readme + '\n\n' + history,
+    long_description=readme,
     author="Simon de Haan",
     author_email='simon@praekeltfoundation.org',
     url='https://github.com/smn/robby',
@@ -37,7 +32,7 @@ setup(
                  'robby'},
     include_package_data=True,
     install_requires=requirements,
-    license="ISCL",
+    license="BSD",
     zip_safe=False,
     keywords='robby',
     classifiers=[
@@ -52,6 +47,4 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
     ],
-    test_suite='tests',
-    tests_require=test_requirements
 )

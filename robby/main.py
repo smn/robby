@@ -3,6 +3,8 @@ from klein import Klein
 from twisted.internet import reactor
 from twisted.web import server
 
+from .txredisbayes import TxRedisBayes
+
 
 class RobbySite(server.Site):
 
@@ -23,9 +25,14 @@ class Robby(object):
     """
 
     app = Klein()
-    debug = False
     clock = reactor
     timeout = 5
 
-    def __init__(self, redis):
+    def __init__(self, redis, prefix="bayes:", correction=0.1,
+                 tokenizer=None, debug=False):
         self.redis = redis
+        self.debug = debug
+        self.bayes = TxRedisBayes(self.redis,
+                                  prefix=prefix,
+                                  correction=correction,
+                                  tokenizer=tokenizer)

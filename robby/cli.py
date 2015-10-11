@@ -29,13 +29,16 @@ class UrlType(click.ParamType):
 @click.option('--redis-uri', default='redis://localhost:6379/1',
               help='The redis://hostname:port/db to connect to.',
               type=UrlType())
+@click.option('--prefix', default='bayes:',
+              help='The Redis keyspace prefix to use.',
+              type=str)
 @click.option('--logfile',
               help='Where to log output to.',
               type=click.File('a'),
               default=sys.stdout)
 @click.option('--debug/--no-debug', default=False,
               help='Log debug output or not.')
-def main(redis_uri, logfile, debug):
+def main(redis_uri, prefix, logfile, debug):
     from robby.main import Robby
     from twisted.internet import reactor
     from twisted.python import log
@@ -44,6 +47,6 @@ def main(redis_uri, logfile, debug):
     log.startLogging(logfile)
 
     d = Connection(redis_uri.hostname, int(redis_uri.port or 6379))
-    d.addCallback(lambda redis: Robby(redis, debug=debug))
+    d.addCallback(lambda redis: Robby(redis, prefix=prefix, debug=debug))
 
     reactor.run()

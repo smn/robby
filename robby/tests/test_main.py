@@ -3,7 +3,7 @@
 
 from twisted.internet.defer import inlineCallbacks
 from twisted.trial.unittest import TestCase
-import txredisapi as redis
+import txredisapi
 
 from robby.main import Robby
 
@@ -12,7 +12,7 @@ class TestRobby(TestCase):
 
     @inlineCallbacks
     def setUp(self):
-        self.redis = yield redis.Connection()
+        self.redis = yield txredisapi.Connection()
         self.robby = Robby(self.redis)
 
     def tearDown(self):

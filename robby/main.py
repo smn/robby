@@ -46,9 +46,32 @@ class Robby(object):
         d.addCallback(lambda result: json.dumps(result))
         return d
 
+    @app.route('/untrain/<category>')
+    def untrain(self, request, category):
+        request.setHeader('Content-Type', 'application/json')
+        d = self.bayes.untrain(category, request.content.read())
+        d.addCallback(lambda result: json.dumps(result))
+        return d
+
     @app.route('/classify')
     def classify(self, request):
         request.setHeader('Content-Type', 'application/json')
         d = self.bayes.classify(request.content.read())
+        d.addCallback(lambda result: json.dumps({
+            'category': result,
+        }))
+        return d
+
+    @app.route('/score')
+    def score(self, request):
+        request.setHeader('Content-Type', 'application/json')
+        d = self.bayes.score(request.content.read())
+        d.addCallback(lambda result: json.dumps(result))
+        return d
+
+    @app.route('/flush')
+    def flush(self, request):
+        request.setHeader('Content-Type', 'application/json')
+        d = self.bayes.flush()
         d.addCallback(lambda result: json.dumps(result))
         return d

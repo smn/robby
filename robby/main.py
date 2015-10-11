@@ -1,3 +1,5 @@
+import json
+
 from klein import Klein
 
 from twisted.internet import reactor
@@ -20,7 +22,7 @@ class Robby(object):
     Robby, Probability as a Service.
     A simple REST based API for Naive Bayesian Inference.
 
-    :param txredis.Redis redis:
+    :param txredisapi.Connection redis:
         The txredis connection
     """
 
@@ -36,3 +38,17 @@ class Robby(object):
                                   prefix=prefix,
                                   correction=correction,
                                   tokenizer=tokenizer)
+
+    @app.route('/train/<category>')
+    def train(self, request, category):
+        request.setHeader('Content-Type', 'application/json')
+        d = self.bayes.train(category, request.content.read())
+        d.addCallback(lambda result: json.dumps(result))
+        return d
+
+    @app.route('/classify')
+    def classify(self, request):
+        request.setHeader('Content-Type', 'application/json')
+        d = self.bayes.classify(request.content.read())
+        d.addCallback(lambda result: json.dumps(result))
+        return d

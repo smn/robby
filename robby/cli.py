@@ -48,5 +48,6 @@ def main(redis_uri, prefix, logfile, debug):
 
     d = Connection(redis_uri.hostname, int(redis_uri.port or 6379))
     d.addCallback(lambda redis: Robby(redis, prefix=prefix, debug=debug))
+    d.addCallback(lambda robby: robby.app.run('localhost', 8000))
 
     reactor.run()

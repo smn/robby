@@ -87,17 +87,30 @@ class TxRedisBayes(object):
         occurs = occurances(self.tokenizer(text))
         scores = {}
         categories = yield self.redis.smembers(self.key('categories'))
-        for category in categories:
+
+        @inlineCallbacks
+        def score_category(category):
             tally = yield self.tally(category)
             if tally == 0:
-                continue
-            scores[category] = 0.0
-            for word, count in occurs.iteritems():
-                score = yield self.redis.hget(self.key(category), word)
-                assert not score or score > 0, "corrupt bayesian database"
-                score = score or self.correction
-                scores[category] += math.log(float(score) / tally)
-        returnValue(scores)
+                return
+            results = yield gatherResults([
+                score_word(word, tally, category)
+                for word, _ in occurs.iteritems()
+            ])
+            returnValue((category, sum(results)))
+
+        @inlineCallbacks
+        def score_word(word, tally, category):
+            score = yield self.redis.hget(self.key(category), word)
+            assert not score or score > 0, "corrupt bayesian database"
+            score = score or self.correction
+            returnValue(math.log(float(score) / tally))
+
+        scores = yield gatherResults([
+            score_category(category)
+            for category in categories
+        ])
+        returnValue(dict(scores))
 
     def tally(self, category):
         def raise_(exception):

@@ -10,6 +10,8 @@ from .samples import SAMPLE_TEXT_1, SAMPLE_TEXT_2
 
 class TxRedisBayesTest(TestCase):
 
+    timeout = 1
+
     @inlineCallbacks
     def setUp(self):
         self.redis = yield txredisapi.Connection()

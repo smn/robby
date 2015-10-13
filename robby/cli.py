@@ -52,7 +52,8 @@ def main(redis_uri, interface, port, prefix, logfile, debug):
 
     log.startLogging(logfile)
 
-    d = Connection(redis_uri.hostname, int(redis_uri.port or 6379))
+    d = Connection(redis_uri.hostname, int(redis_uri.port or 6379),
+                   int(redis_uri.path[1:]))
     d.addCallback(lambda redis: Robby(redis, prefix=prefix, debug=debug))
     d.addCallback(lambda robby: robby.app.run(interface, port))
 

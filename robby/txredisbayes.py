@@ -31,7 +31,7 @@ class TxRedisBayes(object):
         self.tokenizer = tokenizer or english_tokenizer
         self.stemming = stemming
         if self.stemming:
-            self.stemmer = snowballstemmer.stemmer(self.stemming_language)
+            self.stemmer = snowballstemmer.stemmer(stemming_language)
 
     def key(self, *parts):
         return '%s%s' % (self.prefix, ':'.join(parts))

@@ -65,5 +65,6 @@ def main(redis_uri, interface, port, prefix, logfile, stemming,
                                       stemming=stemming,
                                       stemming_language=stemming_language))
     d.addCallback(lambda robby: robby.app.run(interface, port))
+    d.addErrback(log.err)
 
     reactor.run()

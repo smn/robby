@@ -64,7 +64,7 @@ def main(redis_uri, interface, port, prefix, logfile, stemming,
     d.addCallback(lambda redis: Robby(redis, prefix=prefix, debug=debug,
                                       stemming=stemming,
                                       stemming_language=stemming_language))
-    d.addCallback(lambda robby: robby.app.run(interface, port))
     d.addErrback(log.err)
+    d.addCallback(lambda robby: robby.app.run(interface, port))
 
     reactor.run()

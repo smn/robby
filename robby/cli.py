@@ -42,9 +42,16 @@ class UrlType(click.ParamType):
               help='Where to log output to.',
               type=click.File('a'),
               default=sys.stdout)
+@click.option('--stemming/--no-stemming',
+              help='Whether or not to use stemming.',
+              default=False)
+@click.option('--stemming-language',
+              help='What language to use for stemming.',
+              type=str, default='english')
 @click.option('--debug/--no-debug', default=False,
               help='Log debug output or not.')
-def main(redis_uri, interface, port, prefix, logfile, debug):
+def main(redis_uri, interface, port, prefix, logfile, stemming,
+         stemming_language, debug):
     from robby.main import Robby
     from twisted.internet import reactor
     from twisted.python import log
@@ -54,7 +61,9 @@ def main(redis_uri, interface, port, prefix, logfile, debug):
 
     d = Connection(redis_uri.hostname, int(redis_uri.port or 6379),
                    int(redis_uri.path[1:]))
-    d.addCallback(lambda redis: Robby(redis, prefix=prefix, debug=debug))
+    d.addCallback(lambda redis: Robby(redis, prefix=prefix, debug=debug,
+                                      stemming=stemming,
+                                      stemming_language=stemming_language))
     d.addCallback(lambda robby: robby.app.run(interface, port))
 
     reactor.run()

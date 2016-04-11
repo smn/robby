@@ -31,13 +31,16 @@ class Robby(object):
     timeout = 5
 
     def __init__(self, redis, prefix="bayes:", correction=0.1,
-                 tokenizer=None, debug=False):
+                 tokenizer=None, debug=False, stemming=False,
+                 stemming_language='english'):
         self.redis = redis
         self.debug = debug
         self.bayes = TxRedisBayes(self.redis,
                                   prefix=prefix,
                                   correction=correction,
-                                  tokenizer=tokenizer)
+                                  tokenizer=tokenizer,
+                                  stemming=stemming,
+                                  stemming_language=stemming_language)
 
     @app.route('/train/<category>')
     def train(self, request, category):

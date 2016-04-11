@@ -1,5 +1,7 @@
 import math
 
+import snowballstemmer
+
 from twisted.internet import reactor
 from twisted.internet.defer import gatherResults, inlineCallbacks, returnValue
 
@@ -21,14 +23,28 @@ class TxRedisBayes(object):
     clock = reactor
 
     def __init__(self, redis, prefix="bayes:", correction=0.1,
-                 tokenizer=None):
+                 tokenizer=None, stemming=False,
+                 stemming_language='english'):
         self.redis = redis
         self.prefix = prefix
         self.correction = correction
         self.tokenizer = tokenizer or english_tokenizer
+        self.stemming = stemming
+        if self.stemming:
+            self.stemmer = snowballstemmer.stemmer(self.stemming_language)
 
     def key(self, *parts):
         return '%s%s' % (self.prefix, ':'.join(parts))
+
+    def stem_word(self, word):
+        if self.stemming:
+            return self.stemmer.stemWord(word)
+        return word
+
+    def stem_words(self, words):
+        if self.stemming:
+            return self.stemmer.stemWords(words)
+        return words
 
     def flush(self):
         d = self.redis.smembers(self.key('categories'))
@@ -41,7 +57,7 @@ class TxRedisBayes(object):
     def train(self, category, text):
         d = self.redis.sadd(self.key('categories'), category)
         d.addCallback(lambda _: gatherResults([
-            self.redis.hincrby(self.key(category), word, count)
+            self.redis.hincrby(self.key(category), self.stem_word(word), count)
             for word, count in occurances(self.tokenizer(text)).iteritems()
         ]))
         return d
@@ -69,7 +85,8 @@ class TxRedisBayes(object):
             return d
 
         d = gatherResults([
-            untrain_word(word, count) for word, count in word_counts
+            untrain_word(self.stem_word(word), count)
+            for word, count in word_counts
         ])
         d.addCallback(lambda _: cleanup(category))
         return d
@@ -84,7 +101,7 @@ class TxRedisBayes(object):
 
     @inlineCallbacks
     def score(self, text):
-        occurs = occurances(self.tokenizer(text))
+        occurs = occurances(self.stem_words(self.tokenizer(text)))
         scores = {}
         categories = yield self.redis.smembers(self.key('categories'))
 

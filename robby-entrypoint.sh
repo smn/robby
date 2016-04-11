@@ -6,4 +6,6 @@ python `which robby` \
     --interface 0.0.0.0 \
     --port ${ROBBY_PORT:-8080} \
     --prefix ${ROBBY_PREFIX:-"robby"} \
+    --stemming \
+    --stemming-language=${ROBBY_STEMMING_LANGUAGE:-"english"} \
     --debug

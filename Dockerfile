@@ -1,5 +1,6 @@
 FROM praekeltfoundation/python-base
 
+RUN apt-get-install.sh python-devel
 COPY . /robby
 RUN pip install -e /robby
 

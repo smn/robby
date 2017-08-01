@@ -84,6 +84,10 @@ def english_tokenizer(text):
     return [w for w in words if len(w) > 2 and w not in english_ignore]
 
 
+def dumb_tokenizer(text):
+    return [word for word in tidy(text).split() if len(word) > 2]
+
+
 def occurances(words):
     counts = {}
     for word in words:

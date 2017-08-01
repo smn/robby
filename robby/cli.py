@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 from urlparse import urlparse
+import importlib
 
 import click
 
@@ -23,6 +24,17 @@ class UrlType(click.ParamType):
             self.fail('Invalid Redis db index.')
 
         return url
+
+
+class CallableType(click.ParamType):
+    name = 'callable'
+    def convert(self, value, param, ctx):
+        try:
+            mod_name, func_name = value.rsplit('.',1)
+            mod = importlib.import_module(mod_name)
+            return getattr(mod, func_name)
+        except ImportError:
+            self.fail('Not a valid callable')
 
 
 @click.command()
@@ -50,8 +62,10 @@ class UrlType(click.ParamType):
               type=str, default='english')
 @click.option('--debug/--no-debug', default=False,
               help='Log debug output or not.')
+@click.option('--tokenizer',
+              help='Which tokenizer to user', type=CallableType())
 def main(redis_uri, interface, port, prefix, logfile, stemming,
-         stemming_language, debug):
+         stemming_language, debug, tokenizer):
     from robby.main import Robby
     from twisted.internet import reactor
     from twisted.python import log
@@ -63,7 +77,8 @@ def main(redis_uri, interface, port, prefix, logfile, stemming,
                    int(redis_uri.path[1:]))
     d.addCallback(lambda redis: Robby(redis, prefix=prefix, debug=debug,
                                       stemming=stemming,
-                                      stemming_language=stemming_language))
+                                      stemming_language=stemming_language,
+                                      tokenizer=tokenizer))
     d.addErrback(log.err)
     d.addCallback(lambda robby: robby.app.run(interface, port))
 

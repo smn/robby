@@ -1,8 +1,11 @@
-FROM praekeltfoundation/python-base
+FROM praekeltfoundation/pypy-base
 
 RUN apt-get-install.sh gcc python-dev
-COPY . /robby
-RUN pip install -e /robby
+WORKDIR /app
+
+COPY . /app
+RUN pip install -e .
 RUN apt-get-purge.sh gcc python-dev
 
-ENTRYPOINT ["eval-args.sh", "dinit", "/robby/robby-entrypoint.sh"]
+ENTRYPOINT ["tini", "--", "/app/robby-entrypoint.sh"]
+CMD []

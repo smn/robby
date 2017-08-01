@@ -9,4 +9,5 @@ exec `which python` `which robby` \
     --prefix ${ROBBY_PREFIX:-"robby"} \
     --stemming \
     --stemming-language=${ROBBY_STEMMING_LANGUAGE:-"english"} \
+    --tokenizer=${ROBBY_TOKENIZER:-"robby.utils.english_tokenizer"} \
     --debug

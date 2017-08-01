@@ -9,6 +9,7 @@ from twisted.web.server import Site
 
 import txredisapi
 
+import json
 import treq
 
 from robby.main import Robby
@@ -57,6 +58,18 @@ class TestRobby(TestCase):
     def test_train(self):
         yield self.request('PUT', '/train/sample1', data=SAMPLE_TEXT_1)
         yield self.request('PUT', '/train/sample2', data=SAMPLE_TEXT_2)
+        response = yield self.request('PUT', '/classify', data=SAMPLE_TEXT_1)
+        data = yield response.json()
+        self.assertEqual(data, {
+            'category': 'sample1'
+        })
+
+    @inlineCallbacks
+    def test_batch_train(self):
+        yield self.request('PUT', '/batch/train', data=json.dumps([
+            {'category': 'sample1', 'content': SAMPLE_TEXT_1},
+            {'category': 'sample2', 'content': SAMPLE_TEXT_2},
+        ]))
         response = yield self.request('PUT', '/classify', data=SAMPLE_TEXT_1)
         data = yield response.json()
         self.assertEqual(data, {

@@ -3,6 +3,7 @@ import json
 from klein import Klein
 
 from twisted.internet import reactor
+from twisted.internet.defer import gatherResults
 from twisted.web import server
 
 from .txredisbayes import TxRedisBayes
@@ -46,6 +47,17 @@ class Robby(object):
     def train(self, request, category):
         request.setHeader('Content-Type', 'application/json')
         d = self.bayes.train(category, request.content.read())
+        d.addCallback(lambda result: json.dumps(result))
+        return d
+
+    @app.route('/batch/train')
+    def batch_train(self, request):
+        request.setHeader('Content-Type', 'application/json')
+        data = json.load(request.content)
+
+        d = gatherResults([
+            self.bayes.train(item['category'], item['content'])
+            for item in data])
         d.addCallback(lambda result: json.dumps(result))
         return d
 

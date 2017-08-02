@@ -45,30 +45,30 @@ API
 
 To train it::
 
-    $ curl -d 'training sample' http://localhost:8000/train/category
+    $ curl -d 'training sample' http://localhost:8080/train/category
 
 To untrain it::
 
-    $ curl -d 'training sample' http://localhost:8000/untrain/category
+    $ curl -d 'training sample' http://localhost:8080/untrain/category
 
 To train it in batches::
 
-    $ curl -d '[{"category": "category", "content": "training sample"}]' http://localhost:8000/batch/train
+    $ curl -d '[{"category": "category", "content": "training sample"}]' http://localhost:8080/batch/train
 
 To classify::
 
-    $ curl -d 'sample message' http://localhost:8000/classify
+    $ curl -d 'sample message' http://localhost:8080/classify
     {
         "category": "category"
     }
 
 To get scoring::
 
-    $ curl -d 'sample message' http://localhost:8000/score
+    $ curl -d 'sample message' http://localhost:8080/score
     {
         "category": 0.01
     }
 
 To get clear the db::
 
-    $ curl http://localhost:8000/flush
+    $ curl http://localhost:8080/flush

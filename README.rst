@@ -55,10 +55,6 @@ To train it in batches::
 
     $ curl -d '[{"category": "category", "content": "training sample"}]' http://localhost:8000/batch/train
 
-To train it in batches::
-
-    $ curl -d '[{"category": "category", "content": "training sample"}]' http://localhost:8000/batch/train
-
 To classify::
 
     $ curl -d 'sample message' http://localhost:8000/classify

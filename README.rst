@@ -71,4 +71,4 @@ To get scoring::
 
 To get clear the db::
 
-    $ curl http://localhost:8080/flush
+    $ curl -X DELETE http://localhost:8080/flush

@@ -43,14 +43,14 @@ class Robby(object):
                                   stemming=stemming,
                                   stemming_language=stemming_language)
 
-    @app.route('/train/<category>')
+    @app.route('/train/<category>', methods=['POST'])
     def train(self, request, category):
         request.setHeader('Content-Type', 'application/json')
         d = self.bayes.train(category, request.content.read())
         d.addCallback(lambda result: json.dumps(result))
         return d
 
-    @app.route('/batch/train')
+    @app.route('/batch/train', methods=['POST'])
     def batch_train(self, request):
         request.setHeader('Content-Type', 'application/json')
         data = json.load(request.content)
@@ -61,14 +61,14 @@ class Robby(object):
         d.addCallback(lambda result: json.dumps(result))
         return d
 
-    @app.route('/untrain/<category>')
+    @app.route('/untrain/<category>', methods=['POST'])
     def untrain(self, request, category):
         request.setHeader('Content-Type', 'application/json')
         d = self.bayes.untrain(category, request.content.read())
         d.addCallback(lambda result: json.dumps(result))
         return d
 
-    @app.route('/classify')
+    @app.route('/classify', methods=['POST'])
     def classify(self, request):
         request.setHeader('Content-Type', 'application/json')
         d = self.bayes.classify(request.content.read())
@@ -77,14 +77,14 @@ class Robby(object):
         }))
         return d
 
-    @app.route('/score')
+    @app.route('/score', methods=['POST'])
     def score(self, request):
         request.setHeader('Content-Type', 'application/json')
         d = self.bayes.score(request.content.read())
         d.addCallback(lambda result: json.dumps(result))
         return d
 
-    @app.route('/flush')
+    @app.route('/flush', methods=['DELETE'])
     def flush(self, request):
         request.setHeader('Content-Type', 'application/json')
         d = self.bayes.flush()

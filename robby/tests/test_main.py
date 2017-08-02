@@ -48,7 +48,7 @@ class TestRobby(TestCase):
     def test_classify(self):
         yield self.robby.bayes.train('sample1', SAMPLE_TEXT_1)
         yield self.robby.bayes.train('sample2', SAMPLE_TEXT_2)
-        response = yield self.request('PUT', '/classify', data=SAMPLE_TEXT_1)
+        response = yield self.request('POST', '/classify', data=SAMPLE_TEXT_1)
         data = yield response.json()
         self.assertEqual(data, {
             'category': 'sample1'
@@ -56,9 +56,9 @@ class TestRobby(TestCase):
 
     @inlineCallbacks
     def test_train(self):
-        yield self.request('PUT', '/train/sample1', data=SAMPLE_TEXT_1)
-        yield self.request('PUT', '/train/sample2', data=SAMPLE_TEXT_2)
-        response = yield self.request('PUT', '/classify', data=SAMPLE_TEXT_1)
+        yield self.request('POST', '/train/sample1', data=SAMPLE_TEXT_1)
+        yield self.request('POST', '/train/sample2', data=SAMPLE_TEXT_2)
+        response = yield self.request('POST', '/classify', data=SAMPLE_TEXT_1)
         data = yield response.json()
         self.assertEqual(data, {
             'category': 'sample1'
@@ -66,11 +66,11 @@ class TestRobby(TestCase):
 
     @inlineCallbacks
     def test_batch_train(self):
-        yield self.request('PUT', '/batch/train', data=json.dumps([
+        yield self.request('POST', '/batch/train', data=json.dumps([
             {'category': 'sample1', 'content': SAMPLE_TEXT_1},
             {'category': 'sample2', 'content': SAMPLE_TEXT_2},
         ]))
-        response = yield self.request('PUT', '/classify', data=SAMPLE_TEXT_1)
+        response = yield self.request('POST', '/classify', data=SAMPLE_TEXT_1)
         data = yield response.json()
         self.assertEqual(data, {
             'category': 'sample1'
@@ -78,9 +78,9 @@ class TestRobby(TestCase):
 
     @inlineCallbacks
     def test_untrain(self):
-        yield self.request('PUT', '/train/sample1', data=SAMPLE_TEXT_1)
-        yield self.request('PUT', '/untrain/sample1', data=SAMPLE_TEXT_1)
-        response = yield self.request('PUT', '/classify', data=SAMPLE_TEXT_1)
+        yield self.request('POST', '/train/sample1', data=SAMPLE_TEXT_1)
+        yield self.request('POST', '/untrain/sample1', data=SAMPLE_TEXT_1)
+        response = yield self.request('POST', '/classify', data=SAMPLE_TEXT_1)
         data = yield response.json()
         self.assertEqual(data, {
             'category': None
@@ -88,18 +88,18 @@ class TestRobby(TestCase):
 
     @inlineCallbacks
     def test_score(self):
-        yield self.request('PUT', '/train/sample1', data=SAMPLE_TEXT_1)
-        response = yield self.request('PUT', '/score', data=SAMPLE_TEXT_1)
+        yield self.request('POST', '/train/sample1', data=SAMPLE_TEXT_1)
+        response = yield self.request('POST', '/score', data=SAMPLE_TEXT_1)
         data = yield response.json()
         self.assertEqual(int(data['sample1']), -211)
 
     @inlineCallbacks
     def test_flush(self):
-        yield self.request('PUT', '/train/sample1', data=SAMPLE_TEXT_1)
+        yield self.request('POST', '/train/sample1', data=SAMPLE_TEXT_1)
         self.assertTrue(
             (yield self.redis.sismember(
                 self.robby.bayes.key('categories'), 'sample1')))
-        response = yield self.request('POST', '/flush')
+        response = yield self.request('DELETE', '/flush')
         data = yield response.json()
         self.assertEqual(int(data), 1)
         self.assertFalse(

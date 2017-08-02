@@ -17,9 +17,7 @@ Probabilities as a Service
     :target: https://robby.readthedocs.org
     :alt: Robby Documentation
 
-Available as a docker container with ``docker pull sdehaan/robby``
-or ``pip install robby`` and run directly.
-
+Available as a docker container with ``docker pull sdehaan/robby``.
 The docker container allow the for the following environment variables:
 
 * REDIS_HOST, defaults to ``127.0.0.1``
@@ -30,7 +28,8 @@ The docker container allow the for the following environment variables:
 * ROBBY_STEMMING_LANGUAGE, defaults to ``english``
 * ROBBY_TOKENIZER, the python callable to use for tokenizing. Defaults to ``robby.utils.english_tokenizer``, ``robby.utils.dumb_tokenizer`` is also available.
 
-::
+Or ``pip install robby`` and run directly::
+
     robby \
         --redis-uri redis://127.0.0.1:6379/1 \
         --interface 0.0.0.0 \
@@ -41,8 +40,8 @@ The docker container allow the for the following environment variables:
         --tokenizer=robby.utils.english_tokenizer \
         --debug
 
-
-API:
+API
+---
 
 To train it::
 

@@ -17,7 +17,18 @@ Probabilities as a Service
     :target: https://robby.readthedocs.org
     :alt: Robby Documentation
 
-Running:
+Available as a docker container with ``docker pull sdehaan/robby``
+or ``pip install robby`` and run directly.
+
+The docker container allow the for the following environment variables:
+
+* REDIS_HOST, defaults to ``127.0.0.1``
+* REDIS_PORT, defaults to ``6379``
+* REDIS_DB, defaults to ``1``
+* ROBBY_PORT, defaults to ``8080``
+* ROBBY_PREFIX, the prefix for Redis keys, defaults to ``robby``
+* ROBBY_STEMMING_LANGUAGE, defaults to ``english``
+* ROBBY_TOKENIZER, the python callable to use for tokenizing. Defaults to ``robby.utils.english_tokenizer``, ``robby.utils.dumb_tokenizer`` is also available.
 
 ::
     robby \

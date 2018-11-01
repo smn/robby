@@ -1,32 +1,27 @@
 sudo: false
 language: python
 python:
-  - "2.7"
+    - "2.7"
 cache:
-  directories:
-    - $HOME/.pip-cache/
-
+    directories:
+        - "$HOME/.pip-cache/"
 services:
-  - redis-server
-
+    - redis-server
 install:
-  - pip install coveralls
-  - pip install wheel
-  - pip install -r requirements-dev.txt
-  - pip install -e .
-
+    - pip install coveralls
+    - pip install wheel
+    - pip install -r requirements-dev.txt
+    - pip install -e .
 script:
-  - py.test --cov=robby --cov-report=term
-
+    - py.test --cov=robby --cov-report=term
 after_success:
-  - coveralls
-
+    - coveralls
 deploy:
-  provider: pypi
-  distributions: sdist bdist_wheel
-  user: smn
-  password:
-    secure: "TH/RxG2FUlK+ObrdoDVHyJliQew7A3XFwhmVuXKaeZy0O9u0yN6Tr2NkYtdzSeToj00gtC1wRWwzJARjhd15TgmTtg7h7+ZFbC+2n7Q3CR92sO8fwxoWCFz/uL2LnGwlScR6PSx2Y357TK1xXB3+ulF8stAb2unRNUGA7n+WwP61mSFMBbP+sRo6+7qIa+KBy/uzb2jwz+QBWA4/Y1lGCkY5Qj5l9+zievnRJuKOcajM+Vv4U9Jc1G1eSdg+kZI9R8wqf64ZbEfF404O/XPPx5VMbcKkPshiGehMtyz/vhNQDsXKNWzcHrwmZ1EzWetyRzx03xcsWd9M2bSsCJgfSl7pbe6b1tXzkZ5/TQIKwEJlWBGwx71RGiIaWJpujofkHZvqcABek/bPde632ZgD3j1P3SotGrweQlp1gR9hz5mpTvM4s4O1F8QerTczd5gYrqjAwOAH/2GG5Gph6hlYK+zsQ01bBtRUngKOzhFVM2WuPIAXYicCVl2GbLlLMdND6GeGGDfu+zPUmYF8P6jLLClYYW87E3QepDHYCslN3J9ZRFvu/CeG5lCTQ7uWE2yJUzwGiln9d10SzJweh0KAsFGqLo6aV0qd5aTvYOBoq5M77FR4CsDsiv7tqi/dvaaz0At/ogzH0bD84vJhVT/Ap4F/veFg0B93tyhV72owrV4="
-  on:
-    tags: true
-    all_branches: true
+    provider: pypi
+    distributions: sdist bdist_wheel
+    user: smn
+    password:
+        secure: DR3y8NAR41zKVh5b4sJTxlLC/GcBD52cp3EGW7BnAG4tJG+Jyj7h+UWL2o775CMwY0jdvL5GInXG8bB+fOAMbpvlag7EBBplsDlevo7pCgKSISlAQ2kANNbi0qkHEWoNPJAaLHH9ZRTuM6htSShJqsRE95hapgmNrNmAKSFNwPi5MEN9RvSY8fs/U6RvT027j/rjUbJ8vSWFBa0h2AMDv5OTKq7dxUiOieh42CqY12SBRuRshctayXUMnoehRQZD1Lh/0VGYLjRA/g7arR/U0V9PdUqVy0l9Sr7rx+PneSjMfeo82iTgi7VNqQJkbhJbtRFu/UtIGCdzxNwrtplOjhUWh8cRZJ4r15sWsGbEg4mUJZDXtawwzYoM9uzWeoO9S+GQlsLjnjipfVSRVkhfHiWvtJMwgq+LW+OODjBo9OkZ6rGwPNtOXmqdrV1txhoPYXj8H/xVtudM14uEKJwoSOGAiGOrDccp/+rgbh2UYvZpCdylWWLcD/PE771Kyt6Y2fdWrpw8UiMcp5ideP88oBMn6VsotE2tj0NCgZlUVUB4Ku1YbFuNFJz08NxcvTHaVOFZa47nyMB0MR2lcbPJgY04N7v3kxv3htvlIjZv+immq/U9Ks62EnV/W0gbEAdgBk00ws3VXmHrpjSUdTg3q/mo9qX1vXb/INejiQkbvmc=
+    on:
+        tags: true
+        all_branches: true

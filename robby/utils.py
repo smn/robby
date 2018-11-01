@@ -9,7 +9,8 @@
 import re
 
 
-english_ignore = set("""
+english_ignore = set(
+    """
 a able about above abroad according accordingly across actually adj after
 afterwards again against ago ahead ain't all allow allows almost alone along
 alongside already also although always am amid amidst among amongst an and
@@ -67,16 +68,18 @@ whilst whither who who'd whoever whole who'll whom whomever who's whose why
 will willing wish with within without wonder won't would wouldn't x y yes yet
 you you'd you'll your you're yours yourself yourselves you've z zero
 successful greatest began including being all for close but
-""".split())
+""".split()
+)
 
 
 def tidy(text):
     if not isinstance(text, basestring):
         text = str(text)
     if not isinstance(text, unicode):
-        text = text.decode('utf8')
+        text = text.decode("utf8")
+
     text = text.lower()
-    return re.sub(r'[\_.,<>:;~+|\[\]?`"!@#$%^&*()\s]', ' ', text, re.UNICODE)
+    return re.sub(r'[\_.,<>:;~+|\[\]?`"!@#$%^&*()\s]', " ", text, re.UNICODE)
 
 
 def english_tokenizer(text):

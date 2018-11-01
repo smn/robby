@@ -1,4 +1,4 @@
-FROM praekeltfoundation/pypy-base
+FROM praekeltfoundation/python-base:3.6
 
 RUN apt-get-install.sh gcc python-dev
 WORKDIR /app

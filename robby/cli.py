@@ -28,6 +28,7 @@ class UrlType(click.ParamType):
 
 class CallableType(click.ParamType):
     name = 'callable'
+
     def convert(self, value, param, ctx):
         try:
             mod_name, func_name = value.rsplit('.',1)

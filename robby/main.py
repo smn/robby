@@ -43,50 +43,50 @@ class Robby(object):
                                   stemming=stemming,
                                   stemming_language=stemming_language)
 
-    @app.route('/train/<category>', methods=['POST'])
-    def train(self, request, category):
+    @app.route('/train/<bucket>/<category>', methods=['POST'])
+    def train(self, request, category, bucket='default'):
         request.setHeader('Content-Type', 'application/json')
-        d = self.bayes.train(category, request.content.read())
+        d = self.bayes.train(category, request.content.read(), bucket=bucket)
         d.addCallback(lambda result: json.dumps(result))
         return d
 
-    @app.route('/batch/train', methods=['POST'])
-    def batch_train(self, request):
+    @app.route('/batch/train/<bucket>', methods=['POST'])
+    def batch_train(self, request, bucket='default'):
         request.setHeader('Content-Type', 'application/json')
         data = json.load(request.content)
 
         d = gatherResults([
-            self.bayes.train(item['category'], item['content'])
+            self.bayes.train(item['category'], item['content'], bucket=bucket)
             for item in data])
         d.addCallback(lambda result: json.dumps(result))
         return d
 
-    @app.route('/untrain/<category>', methods=['POST'])
-    def untrain(self, request, category):
+    @app.route('/untrain/<bucket>/<category>', methods=['POST'])
+    def untrain(self, request, category, bucket='default'):
         request.setHeader('Content-Type', 'application/json')
-        d = self.bayes.untrain(category, request.content.read())
+        d = self.bayes.untrain(category, request.content.read(), bucket=bucket)
         d.addCallback(lambda result: json.dumps(result))
         return d
 
-    @app.route('/classify', methods=['POST'])
-    def classify(self, request):
+    @app.route('/classify/<bucket>', methods=['POST'])
+    def classify(self, request, bucket='default'):
         request.setHeader('Content-Type', 'application/json')
-        d = self.bayes.classify(request.content.read())
+        d = self.bayes.classify(request.content.read(), bucket=bucket)
         d.addCallback(lambda result: json.dumps({
             'category': result,
         }))
         return d
 
-    @app.route('/score', methods=['POST'])
-    def score(self, request):
+    @app.route('/score/<bucket>', methods=['POST'])
+    def score(self, request, bucket='default'):
         request.setHeader('Content-Type', 'application/json')
-        d = self.bayes.score(request.content.read())
+        d = self.bayes.score(request.content.read(), bucket=bucket)
         d.addCallback(lambda result: json.dumps(result))
         return d
 
-    @app.route('/flush', methods=['DELETE'])
-    def flush(self, request):
+    @app.route('/flush/<bucket>', methods=['DELETE'])
+    def flush(self, request, bucket='default'):
         request.setHeader('Content-Type', 'application/json')
-        d = self.bayes.flush()
+        d = self.bayes.flush(bucket=bucket)
         d.addCallback(lambda result: json.dumps(result))
         return d

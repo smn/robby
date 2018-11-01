@@ -19,7 +19,7 @@ with open('requirements-dev.txt') as req_file:
 
 setup(
     name='robby',
-    version='0.5.4',
+    version='0.5.5',
     description="Robby",
     long_description=readme,
     author="Simon de Haan",
